@@ -1,0 +1,108 @@
+<!DOCTYPE>
+<html>
+
+<head>
+    <style>
+        * {
+            margin: 0;
+        }
+        html,
+        body {
+            height: 100%;
+            font-family: 'Ubuntu', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(to right, #1fa2ff, #12d8fa, #a6ffcb);
+        }
+        .wheelContainer {
+            text-align: center;
+           
+        }
+        .wheelCanvas {
+            max-width:380px;
+            max-height:380px;
+            transition:max-width 1s ease-in-out;
+            transition:max-height 1s ease-in-out;
+
+        }
+        .wheelCanvas.suppress {
+            max-width:0px;
+            max-height:0px;
+        }
+        .canvasWrapper{
+             position: relative;
+            display: inline-block;
+        }
+        .pointer {
+            width:0;
+            height: 0;
+            border-bottom: 8px solid transparent;
+            border-top: 8px solid transparent;
+            border-right: 40px solid black;
+            position: absolute;
+            top:190px;
+            right:-5;
+        }
+        
+    </style>
+    <link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
+    <script src='Winwheel.min.js'></script><!-- insert bad joke about not reinventing the wheel here -->
+</head>
+
+<body>
+    <div class="mainWrapper">
+        <section class="wheelContainer">
+            <div class="canvasWrapper">
+                <div class="pointer"></div>
+                <canvas id='canvas' class='wheelCanvas suppress' height='500px'  width='500px';>
+                    Canvas not supported, use another browser.
+                </canvas>
+            </div>
+            
+      
+        </section>
+        <section class="previousResults">
+        </section>
+    </div>
+    <h1>Testing sting</h1>
+</body>
+      <script>
+    
+          window.onload = function() {
+              if(!window.location.hash) {
+                  setTimeout(function(){
+                       window.location = window.location + '##';
+                  window.location.reload();
+                  },50)
+              } else {
+                  document.getElementById('canvas').classList.remove('suppress')
+              }
+          }
+                var theWheel = new Winwheel({
+                    'numSegments': 10,
+                    'textAlignment': 'outer',
+                    'textMargin' : 30,
+                    'strokeStyle' : '#E49E49', 
+                    
+                    'segments': [
+                        {'fillStyle': 'rgba(201, 77, 57,0.85)','text': 'Barry'},
+                        {'fillStyle': 'rgba(255, 250, 215,0.5)','text': 'Larry'},
+                        {'fillStyle': 'rgba(201, 77, 57,0.85)','text': 'Sally'},
+                        {'fillStyle': 'rgba(255, 250, 215,0.5)','text': 'Gary'},
+                        {'fillStyle': 'rgba(201, 77, 57,0.85)','text': 'Ben'},
+                        {'fillStyle': 'rgba(255, 250, 215,0.5)','text': 'Glen'},
+                        {'fillStyle': 'rgba(201, 77, 57,0.85)','text': 'Ken'},
+                        {'fillStyle': 'rgba(255, 250, 215,0.5)','text': 'Jen'},
+                        {'fillStyle': 'rgba(201, 77, 57,0.85)','text': 'Tristen'},
+                        {'fillStyle': 'rgba(255, 250, 215,0.5)','text': 'Kristen'},
+                    ],
+                    'fillStyle': 'rgba(255,255,255,0.5)',
+                    'lineWidth': 7,
+                    'textFontFamily':'Ubuntu'
+                });
+
+              
+
+            </script>
+</html>
