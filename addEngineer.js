@@ -2,7 +2,7 @@ const engineers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
 const atLeast2in2weeks = true;
 const noConsecutive = false;
-const noSameDay = true;
+const noSameDay = false;
 
 function getMostRecentTwoWeekPeriod(shifts) {
     return shifts.slice(-((shifts.length % 10) + 10))
@@ -32,18 +32,25 @@ function onlyThoseNotOnSameDay(shiftsToCheckThrough, eligible) {
 
 
     // Test for edge case where there would be a double shift forced into final slot
-    let lastTwoWeeks = getMostRecentTwoWeekPeriod(shiftsToCheckThrough);
-    let noShiftYet = eligibleToReturn.filter(function (engineer) {
-        if (lastTwoWeeks.filter(s => s == engineer).length !== 0) {
-            return true;
-        } else {
-            return false;
+    if (atLeast2in2weeks) { //move into own function - make dependant on both rules active
+        let lastTwoWeeks = getMostRecentTwoWeekPeriod(shiftsToCheckThrough);
+        let noShiftYet = eligibleToReturn.filter(function (engineer) {
+            if (lastTwoWeeks.filter(s => s == engineer).length === 0) {
+                return true;
+            } else {
+                return false;
+            }
+        })
+        if (noShiftYet.length > 0) {
+            numberOfDays = Math.floor(((20 - lastTwoWeeks.length) / 2));
+            if ((numberOfDays - 1) <= Math.ceil(noShiftYet / 2)) {
+                console.log('ltw', lastTwoWeeks, 'noSY', noShiftYet)
+                return noShiftYet;
+            }
         }
-    })
-    numberOfDays = Math.ceil(((20 - lastTwoWeeks.length) / 2));
-    if (numberOfDays == Math.ceil(noShiftYet / 2)) {
-        return noShiftYet;
     }
+
+
     return eligibleToReturn;
 
 }

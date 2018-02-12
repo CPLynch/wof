@@ -3,7 +3,7 @@ const addEngineer = require('../addEngineer').addEngineer;
 
 var testArray = [];
 
-var addNumber = 10000;
+var addNumber = 1000;
 var iteration = 0;
 
 while (iteration < addNumber) {
@@ -13,20 +13,20 @@ while (iteration < addNumber) {
 
 
 
-describe('cleanFile', function () {
+describe('addEngineer', function () {
 
-    
+
     console.log('testArray', testArray);
 
     it('should be an array', function () {
         assert.typeOf(testArray, 'array');
     })
-    
-    it('all elements should be ints', function(){
-      for (var j = 0; j < testArray.length; j++ ) {
-          assert.typeOf(testArray[j],'number')
-      }
-    }) 
+
+    it('all elements should be ints', function () {
+        for (var j = 0; j < testArray.length; j++) {
+            assert.typeOf(testArray[j], 'number')
+        }
+    })
 
 
     //only one shift a day
@@ -50,19 +50,27 @@ describe('cleanFile', function () {
     //one day over two week period
     it('each engineer should only complete one day (2 shifts) in a 2 week period', function () {
         let highestCount = 0;
-        last2weekPeriod = testArray.slice(-((testArray.length % 10) + 10))
-        for (var k = 0; k < last2weekPeriod.length; k++) {
-            var count = 0;
-            for (var l = k; l < last2weekPeriod.length; l++) {
-                if (last2weekPeriod[k] === last2weekPeriod[l]) {
-                    count++
+         console.log('hq', highestCount,'----------------------------')
+        for (var k = 0; k < testArray.length; k = k + 20) {
+            var twoWeekPeriod = testArray.slice(k, k + 20);
+            for (var m = 0; m < twoWeekPeriod.length; m++) {
+                var count = 0;
+                for (var l = m; l < twoWeekPeriod.length; l++) {
+                    if (twoWeekPeriod[k] === last2weekPeriod[l]) {
+                        count++
+                    }
+                }
+                if (count > highestCount) {
+                    highestCount = count;
                 }
             }
-            if (count > highestCount) {
-                highestCount = count;
-            }
+
+
+
         }
-        assert.isAbove(3, highestCount, 'none with three shifts')
+
+        console.log('hq', highestCount,'----------------------------')
+        assert.isBelow(3, highestCount, 'none with three shifts')
 
     })
 
