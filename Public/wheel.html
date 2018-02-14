@@ -1,0 +1,463 @@
+<!DOCTYPE>
+<html>
+
+<head>
+    <style>
+        * {
+            margin: 0;
+        }
+        
+        html,
+        body {
+            height: 100%;
+            font-family: 'Ubuntu', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(to right, #1fa2ff, #12d8fa, #a6ffcb);
+        }
+        
+        .wheelContainer {
+            margin-top: 10vh;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-evenly;
+            align-items: center;
+            text-align: center;
+        }
+        
+        .wheelCanvas {
+            max-width: 380px;
+            max-height: 380px;
+            transform: rotate(0);
+            transition: transform 5s;
+        }
+        
+        .canvasWrapper {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .pointer {
+            width: 0;
+            height: 0;
+            border-bottom: 8px solid transparent;
+            border-top: 8px solid transparent;
+            border-right: 40px solid black;
+            position: absolute;
+            top: 183px;
+            right: -10;
+            z-index: 3;
+        }
+        
+        .resultsContainer {
+            max-width: 580px;
+        }
+        
+        .resultsBox {
+            border: 7px solid #E49E49;
+            background-color: rgba(201, 77, 57, 1);
+            border-radius: 30px;
+            border-bottom-width: 15px;
+        }
+        
+        .spinButton {
+            border: 7px solid #E49E49;
+            border-radius: 50%;
+            background: linear-gradient(340deg, rgba(210, 207, 190, 1), rgba(255, 250, 215, 1) 25%, rgba(255, 250, 215, 1));
+            width: 80px;
+            height: 80px;
+            margin: 12px auto 0 auto;
+            cursor: pointer;
+        }
+        
+        .spinButton:hover {
+            background: rgba(210, 207, 190, 1);
+        }
+        
+        .spinButton.disable {
+            background: rgba(210, 207, 190, 1);
+        }
+        
+        .spinButton h2 {
+            position: relative;
+            top: 23px;
+            user-select: none;
+        }
+        
+        .shiftResults {
+            width: 50%;
+            float: left;
+            user-select: none;
+        }
+        
+        .shiftResults>div {
+            border: 7px solid #E49E49;
+            background-color: rgba(255, 250, 215, 1);
+            margin: 10px 25px 14px 25px;
+            border-radius: 12px;
+        }
+        
+        .shiftResults h3 {
+            width: 80%;
+            height: 26px;
+            padding-top: 5px;
+            margin: 0 auto;
+            border-bottom: 2px solid;
+            margin-top: 4px;
+        }
+        
+        .shiftResults p {
+            height: 26px;
+            font-weight: bold;
+            padding-top: 5px;
+        }
+        
+        .allResults {
+            border: 7px solid #E49E49;
+            background-color: rgba(255, 250, 215, 1);
+            max-height: 200px;
+            overflow-y: scroll;
+        }
+        
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        
+        tr {
+            height: 33px;
+        }
+        
+        th,
+        td {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            max-width: 10px;
+            border: 1px solid black;
+            padding: 4px 6px;
+            text-align: center;
+        }
+        
+        td {
+            font-size: 12px;
+        }
+        
+        tr:nth-child(even) td:first-child,
+        tr:nth-child(odd) td:nth-child(2),
+        tr:nth-child(odd) td:first-child {
+            max-width: 5px;
+            font-size: inherit;
+            font-weight: bold;
+        }
+        
+        .deleteButton {
+            border: 7px solid #E49E49;
+            background-color: rgba(255, 250, 215, 1);
+            border-radius: 12px;
+            margin: 10px auto 10px auto;
+            width: 200px;
+            padding: 4px 8px;
+            cursor: pointer;
+        }
+        
+        .deleteButton:hover {
+            background: rgba(210, 207, 190, 1);
+        }
+
+    </style>
+    <link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
+    <script src='Winwheel.min.js'></script>
+    <!-- insert bad joke about not reinventing the wheel here -->
+</head>
+
+<body>
+    <div class="mainWrapper">
+        <section class="wheelContainer">
+            <div class="canvasWrapper">
+                <div class="pointer"></div>
+                <canvas id='canvas' class='wheelCanvas' height='500px' width='500px' ;>
+                    Canvas not supported, use another browser.
+                </canvas>
+            </div>
+            <div class='resultsContainer'>
+                <div class='resultsBox'>
+                    <div class='spinButton'>
+                        <h2>Spin</h2>
+                    </div>
+                    <div class='shiftResults'>
+                        <div>
+                            <h3>AM Results</h3>
+                            <p id='amResults'></p>
+                        </div>
+                    </div>
+                    <div class='shiftResults'>
+                        <div>
+                            <h3>PM Results</h3>
+                            <p id='pmResults'></p>
+                        </div>
+                    </div>
+
+                    <div class='allResults'>
+                        <table id="resultsTable">
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th></th>
+                                    <th>M</th>
+                                    <th>T</th>
+                                    <th>W</th>
+                                    <th>T</th>
+                                    <th>F</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td rowspan="2">1</td>
+                                    <td>am</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>pm</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class='deleteButton'>
+                        <h2>Clear All</h2>
+                    </div>
+                </div>
+
+            </div>
+
+        </section>
+    </div>
+</body>
+<script>
+    (function() {
+
+
+        document.querySelector('.spinButton').addEventListener('click', function() {
+            if (!document.querySelector('.spinButton').classList.contains('disable')) {
+                spin();
+            }
+        });
+
+
+        document.querySelector('.deleteButton').addEventListener('click', function() {
+            fetch('/shifts', {
+                method: 'DELETE'
+            }).then(function(res) {
+                document.getElementById('amResults').innerHTML = '';
+                document.getElementById('pmResults').innerHTML = '';
+                fetch('/shifts').then(function(res) {
+                    return res.json()
+                }).then(function(data) {
+                    populateTable(data);
+                });
+            });
+
+        })
+
+        var theWheel;
+
+        var degrees = 0;
+
+        function createWheel(data) {
+            var segments = [];
+            var i = 1;
+            for (var engineer in data.config.engineers) {
+                if (i % 2) {
+                    segments.push({
+                        'fillStyle': 'rgba(201, 77, 57, 1)',
+                        'text': data.config.engineers[engineer]
+                    });
+                } else {
+                    segments.push({
+                        'fillStyle': 'rgba(255, 250, 215, 1)',
+                        'text': data.config.engineers[engineer]
+                    });
+
+                }
+                i++;
+            }
+
+            theWheel = new Winwheel({
+                'numSegments': 10,
+                'textAlignment': 'outer',
+                'textMargin': 40,
+                'strokeStyle': '#E49E49',
+                'segments': segments,
+                'fillStyle': 'rgba(255,255,255,0.5)',
+                'lineWidth': 7,
+                'textFontFamily': 'Ubuntu'
+            });
+        }
+
+        function populateTable(data) {
+
+            console.log(data);
+            var numberOfWeeksToAdd = Math.ceil((data.data.length - 10) / 10);
+            var resultsTable = document.getElementById('resultsTable');
+            for (var i = 0; i < 5; i++) {
+                if (data.config.engineers[data.data[2 * i]]) {
+                    resultsTable.rows[1].cells[(i + 2)].innerHTML = data.config.engineers[data.data[2 * i]];
+                } else {
+                    resultsTable.rows[1].cells[(i + 2)].innerHTML = '';
+                }
+                if (data.config.engineers[data.data[2 * i + 1]]) {
+                    resultsTable.rows[2].cells[(i + 1)].innerHTML = data.config.engineers[data.data[2 * i + 1]];
+                } else {
+                    resultsTable.rows[2].cells[(i + 1)].innerHTML = '';
+                }
+            }
+
+            while (resultsTable.rows[3]) {
+                resultsTable.deleteRow(3);
+            }
+
+
+            for (var j = 1; j < numberOfWeeksToAdd + 1; j++) {
+                var newAM = resultsTable.rows[1].cloneNode(true);
+                var newPM = resultsTable.rows[2].cloneNode(true);
+                console.log(newAM)
+                newAM.cells[0].innerHTML = j + 1;
+                for (var k = 0; k < 5; k++) {
+                    if (data.config.engineers[data.data[j * 10 + 2 * k]]) {
+                        newAM.cells[(k + 2)].innerHTML = data.config.engineers[data.data[j * 10 + 2 * k]];
+                    } else {
+                        newAM.cells[(k + 2)].innerHTML = '';
+                    }
+                    if (data.config.engineers[data.data[j * 10 + 2 * k + 1]]) {
+                        newPM.cells[(k + 1)].innerHTML = data.config.engineers[data.data[j * 10 + 2 * k + 1]];
+                    } else {
+                        newPM.cells[(k + 1)].innerHTML = '';
+                    }
+
+
+                }
+                document.querySelector('#resultsTable tbody').appendChild(newAM)
+                document.querySelector('#resultsTable tbody').appendChild(newPM)
+            }
+            return;
+        }
+
+        function spin() {
+            document.querySelector('.spinButton').classList.add('disable');
+            document.getElementById('amResults').innerHTML = '';
+            document.getElementById('pmResults').innerHTML = '';
+            fetch('/shifts', {
+                method: 'PUT'
+            }).then(function(res) {
+                return res.json()
+            }).then(function(data) {
+                var new2 = data.data;
+                var canvasCircle = document.getElementById('canvas');
+                for (var m = 0; m < new2.length; m = m + 1) {
+                    var timeout;
+                    if (m === 0) {
+                        timeout = 0;
+                    } else {
+                        timeout = 7000;
+                    }
+
+                    function setTimeoutForSpin(m, timeout, degrees, pId) {
+                        var m = m;
+                        var pId = pId;
+                        var currentDegress = degrees;
+                        setTimeout(function() {
+                            var angle;
+                            switch (new2[m]) {
+                                case 1:
+                                    angle = 72;
+                                    break;
+                                case 2:
+                                    angle = 36;
+                                    break;
+                                case 3:
+                                    angle = 0;
+                                    break;
+                                case 4:
+                                    angle = -36;
+                                    break;
+                                case 5:
+                                    angle = -72;
+                                    break;
+                                case 6:
+                                    angle = -108;
+                                    break;
+                                case 7:
+                                    angle = -144;
+                                    break;
+                                case 8:
+                                    angle = -180;
+                                    break;
+                                case 9:
+                                    angle = -216;
+                                    break;
+                                case 10:
+                                    angle = -252;
+                                    break;
+                            }
+                            degrees = degrees + (m + 1) * 2160 + angle - (currentDegress % 360);
+                            canvasElement = document.getElementById('canvas');
+                            canvasElement.style.webkitTransform = 'rotate(' + degrees + 'deg)';
+                            canvasElement.style.mozTransform = 'rotate(' + degrees + 'deg)';
+                            canvasElement.style.msTransform = 'rotate(' + degrees + 'deg)';
+                            canvasElement.style.oTransform = 'rotate(' + degrees + 'deg)';
+                            canvasElement.style.transform = 'rotate(' + degrees + 'deg)';
+
+                            function displayResultSetTimeout(i) {
+                                var number = i;
+                                setTimeout(function() {
+                                    console.log('23', i, pId)
+                                    if (i === 0) {
+                                        pId = 'amResults';
+                                    } else {
+                                        pId = 'pmResults';
+                                        fetch('/shifts').then(function(res) {
+                                            return res.json()
+                                        }).then(function(data) {
+                                            populateTable(data);
+                                        });
+                                        document.querySelector('.spinButton').classList.remove('disable');
+                                    }
+                                    document.getElementById(pId).innerHTML = data.config.engineers[new2[number]];
+                                }, 6000)
+                            }
+
+                            displayResultSetTimeout(m);
+
+                        }, timeout)
+                    }
+                    setTimeoutForSpin(m, timeout, degrees)
+                }
+
+
+            })
+        }
+
+
+        window.onload = function() {
+            fetch('/shifts').then(function(res) {
+                return res.json()
+            }).then(function(data) {
+                createWheel(data);
+                populateTable(data);
+            });
+        }
+    })()
+
+</script>
+
+</html>

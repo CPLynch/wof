@@ -48,7 +48,6 @@ describe('addEngineer', function () {
     });
 
     //one day over two week period
-    //not worried about O notation here as test script runs rarely
     it('each engineer should only complete one day (2 shifts) in a 2 week period', function () {
         let highestCount = 0;
         for (let k = 0; k < testArray.length; k = k + 10) {

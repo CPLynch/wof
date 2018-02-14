@@ -32,7 +32,7 @@ app.use(bodyParser.urlencoded({
 
 
 app.get('/', function (req, res) {
-    res.sendFile(__dirname + '/Public/html.html', function (err) {
+    res.sendFile(__dirname + '/Public/wheel.html', function (err) {
         if (err) {
             console.log('There was an error: ' + err)
         }
@@ -60,8 +60,9 @@ app.get('/shifts', function (req, res) {
         config : config,
         data : shifts
     }
-    res.send(JSON.stringify(returnData));
+    res.set('Content-Type', 'application/json').send(JSON.stringify(returnData));
 });
+
 
 //using put not post as not creating anything new just modifying
 app.put('/shifts', function (req, res) {
@@ -82,7 +83,7 @@ app.put('/shifts', function (req, res) {
         config : config,
         data : shifts.slice(-2)
     }
-    res.send(JSON.stringify(returnData));
+    res.set('Content-Type', 'application/json').send(JSON.stringify(returnData));
 });
 
 

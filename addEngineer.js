@@ -2,15 +2,24 @@ const config = require('./config');
 const engineers = Object.keys(config.engineers).map(id => parseInt(id))
 
 
-//Why didn't I try making the rules changable? I have made these rules functionally independant of one another so they can be removed seperately. 
-//In my opinion the time trying to make these work to be compatible with any unlikely, unknown, future changes would take longer than adding or rewriting a single rule.
+//Why didn't I try making the rules changeable? I have made these rules functionally independant of one another so they can be removed separately. 
+//Trying to make these work to be compatible with any unlikely, unknown, future changes may well take longer than adding or rewriting a single rule.
 
 
+/**
+ * @param array - all shifts
+ * @return array - two most recent, full, weeks 
+ **/
 function getMostRecentTwoWeekPeriod(shifts) {
     return shifts.slice(-((shifts.length % 10) + 10))
 }
 
 
+/**
+ * @param array - all shifts
+ * @param array - all eligible engineers
+ * @return array - remaining eligible engineers
+ **/
 function onlyThoseLessThan2(shiftArray, eligible) {
     const lastTwoWeeks = getMostRecentTwoWeekPeriod(shiftArray);
     return eligible.filter(function (engineer) {
@@ -23,6 +32,11 @@ function onlyThoseLessThan2(shiftArray, eligible) {
 }
 
 
+/**
+ * @param array - all shifts
+ * @param array - all eligible engineers
+ * @return array - remaining eligible engineers
+ **/
 function onlyThoseNotOnSameDay(shiftArray, eligible) {
     return eligible.filter(function (engineer) {
         if ((shiftArray.length % 2) === 1) {
@@ -36,6 +50,11 @@ function onlyThoseNotOnSameDay(shiftArray, eligible) {
 }
 
 
+/**
+ * @param array - all shifts
+ * @param array - all eligible engineers
+ * @return array - remaining eligible engineers
+ **/
 function noSameDay2in2WeeksEdgeCases(shiftArray, eligible) {
     const lastTwoWeeks = getMostRecentTwoWeekPeriod(shiftArray);
     const noShiftYet = eligible.filter(function (engineer) {
@@ -55,6 +74,11 @@ function noSameDay2in2WeeksEdgeCases(shiftArray, eligible) {
 }
 
 
+/**
+ * @param array - all shifts
+ * @param array - all eligible engineers
+ * @return array - remaining eligible engineers
+ **/
 function notIfInPreviousDay(shiftArray, eligible) {
     const lastTwoWeeks = getMostRecentTwoWeekPeriod(shiftArray);
     let lastDayShifts;
@@ -67,6 +91,11 @@ function notIfInPreviousDay(shiftArray, eligible) {
 }
 
 
+/**
+ * @param array - all shifts
+ * @param array - all eligible engineers
+ * @return array - remaining eligible engineers
+ **/
 function noConsecutive2in2WeeksEdgeCases(shiftArray, eligible) {
     const lastTwoWeeks = getMostRecentTwoWeekPeriod(shiftArray);
     const shiftsLeft = 20 - lastTwoWeeks.length;
@@ -87,9 +116,14 @@ function noConsecutive2in2WeeksEdgeCases(shiftArray, eligible) {
 }
 
 
+/**
+ * exports method needed to add a new shift 
+ * @param array - all shifts
+ * @return function - all shifts with one new
+ **/
 module.exports = {
     addEngineer: function (shiftArray) {
-        let eligible = [1,2,3,4,5,6,7,8,9,10];
+        let eligible = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
         if (config.atLeast2in2weeks) {
             eligible = onlyThoseLessThan2(shiftArray, eligible);
         }
